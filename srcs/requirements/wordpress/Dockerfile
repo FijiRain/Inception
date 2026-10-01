@@ -6,7 +6,7 @@ RUN sh /tmp/install.sh
 RUN curl -o /tmp/wordpress.tar.gz https://wordpress.org/latest.tar.gz && \
 tar -xzf /tmp/wordpress.tar.gz -C /usr/src/ && \
 rm /tmp/wordpress.tar.gz
-COPY conf/www.conf /etc/php/7.4/fpm/pool.d/www.conf
+COPY conf/www.conf /etc/php/8.2/fpm/pool.d/www.conf
 COPY tools/init.sh /usr/local/bin/init.sh
 RUN chmod +x /usr/local/bin/init.sh
 EXPOSE 9000
