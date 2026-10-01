@@ -1,4 +1,4 @@
-FROM debian:bullseye-slim
+FROM debian:bookworm-slim
 ENV DEBIAN_FRONTEND=noninteractive
 COPY tools/install.sh /tmp/install.sh
 RUN sh /tmp/install.sh
