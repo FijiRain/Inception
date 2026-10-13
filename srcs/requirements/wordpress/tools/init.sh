@@ -45,7 +45,7 @@ if [ ! -f "/var/www/wordpress/.wp_good_init" ]; then
 
     wp core install \
         --path=/var/www/wordpress \
-        --url="${DOMAIN_NAME}" \
+        --url="https://${DOMAIN_NAME}" \
         --title="Inception" \
         --admin_user="${WP_ADMIN_USER}" \
         --admin_password="${WP_ADMIN_PASSWORD}" \

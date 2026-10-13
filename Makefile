@@ -15,7 +15,7 @@ down:
 	$(COMPOSE) down
 
 clean: down
-	$(COMPOSE) down --rmi all
+	$(COMPOSE) down -v --rmi all
 
 fclean: clean
 	sudo rm -rf /home/$(CURR_USER)/data/db_data
