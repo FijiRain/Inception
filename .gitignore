@@ -2,5 +2,5 @@ srcs/.env
 secrets/*.txt
 .vagrant
 
-!secrets/*.txt.exemple
-!srcs/.env.exemple
+!secrets/*.txt.example
+!srcs/.env.example
