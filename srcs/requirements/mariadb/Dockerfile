@@ -1,4 +1,3 @@
-# belek c bookworm la penultimate, verif si ca marche
 FROM debian:bookworm-slim
 ENV DEBIAN_FRONTEND=noninteractive
 COPY tools/install.sh /tmp/install.sh

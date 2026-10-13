@@ -1,26 +1,26 @@
 #!/bin/sh
-set -e # si une commande échoue, le script s'arrête
+set -e # kill script if a command fails
 
 mkdir -p /run/mysqld
-chown mysql:mysql /run/mysqld # pour changer le proprio du fichier
+chown mysql:mysql /run/mysqld # to change the file owner
 
-sed -i "s/bind-address.*/bind-address = 0.0.0.0/" /etc/mysql/mariadb.conf.d/50-server.cnf
+sed -i "s/bind-address.*/bind-address = 0.0.0.0/" /etc/mysql/mariadb.conf.d/50-server.cnf # listen on all interfaces
 
-MYSQL_PASSWORD=$(cat /run/secrets/db_password) # recup les mdp
+MYSQL_PASSWORD=$(cat /run/secrets/db_password) # get the passwords
 MYSQL_ROOT_PASSWORD=$(cat /run/secrets/db_root_password) 
 MYSQL_ADMIN_PASSWORD=$(grep "WP_ADMIN_PASSWORD" /run/secrets/credentials | cut -d'=' -f2)
 
 MYSQL_USER="${MYSQL_USER}"
 MYSQL_ADMIN_USER="${MYSQL_ADMIN_USER}"
 
-# Pour voir s'il manque pas une info ou si y'a pas d'erreur
+# Check if there are no errors or not missing fields
 : "${MYSQL_PASSWORD:?MYSQL_PASSWORD is empty}"
 : "${MYSQL_ROOT_PASSWORD:?MYSQL_ROOT_PASSWORD is empty}"
 : "${MYSQL_ADMIN_PASSWORD:?MYSQL_ADMIN_PASSWORD is empty}"
 : "${MYSQL_USER:?MYSQL_USER is empty}"
 : "${MYSQL_ADMIN_USER:?MYSQL_ADMIN_USER is empty}"
 
-# Verif que le fichier de base existe ou pas
+# check if the original file exists 
 if [ ! -d "/var/lib/mysql/mysql" ]; then
     mariadb-install-db --user=mysql --datadir=/var/lib/mysql
     mysqld --user=mysql &
@@ -28,7 +28,7 @@ if [ ! -d "/var/lib/mysql/mysql" ]; then
         sleep 1
     done
 
-	# commande SQL qui se rentrent tant que pas EOF
+	# SQL command that runs until we reach EOF
     mysql << EOF
 CREATE DATABASE IF NOT EXISTS wordpress;
 CREATE USER IF NOT EXISTS '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}';
@@ -46,4 +46,4 @@ EOF
     mysqladmin shutdown -uroot -p"${MYSQL_ROOT_PASSWORD}"
 fi
 
-exec mysqld --user=mysql # user qu'on retrouve au début du script
+exec mysqld --user=mysql # user that we find at the beginning of the script

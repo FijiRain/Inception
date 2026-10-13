@@ -2,7 +2,7 @@ FROM debian:bookworm-slim
 ENV DEBIAN_FRONTEND=noninteractive
 COPY tools/install.sh /tmp/install.sh
 RUN sh /tmp/install.sh
-# Téléchargement de WordPress dans un dossier de "stock" (pas le volume)
+# Download Wordpress in a storage directory (not the volume)
 RUN curl -o /tmp/wordpress.tar.gz https://wordpress.org/latest.tar.gz && \
 tar -xzf /tmp/wordpress.tar.gz -C /usr/src/ && \
 rm /tmp/wordpress.tar.gz

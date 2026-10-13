@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-# Lecture des variables
+# Reads all variables
 MYSQL_PASSWORD=$(cat /run/secrets/db_password)
 MYSQL_USER="${MYSQL_USER}"
 MYSQL_DATABASE="${MYSQL_DATABASE}"
@@ -11,7 +11,7 @@ DOMAIN_NAME="${DOMAIN_NAME}"
 WP_USER=$(grep "WP_USER=" /run/secrets/credentials | cut -d'=' -f2)
 WP_USER_PASSWORD=$(grep "WP_USER_PASSWORD" /run/secrets/credentials | cut -d'=' -f2)
 
-# Verification des variables pour eviter erreurs
+# Check variables to avoid missing or errors
 : "${MYSQL_USER:?MYSQL_USER is empty}"
 : "${MYSQL_DATABASE:?MYSQL_DATABASE is empty}"
 : "${DOMAIN_NAME:?DOMAIN_NAME is empty}"
@@ -20,13 +20,13 @@ WP_USER_PASSWORD=$(grep "WP_USER_PASSWORD" /run/secrets/credentials | cut -d'=' 
 : "${WP_USER:?WP_USER is empty}"
 : "${WP_USER_PASSWORD:?WP_USER_PASSWORD is empty}"
 
-# Verification du nom d'admin conformemement au sujet
+# Check if the admin name and pwd is not "admin", "Admin" ...
 if echo "${WP_ADMIN_USER}" | grep -qi "admin"; then
     echo "Error: WP_ADMIN_USER must not contain 'admin'" >&2
     exit 1
 fi
 
-# Initialisation de WP au premier démarrage
+# Initialize WP at first boot
 if [ ! -f "/var/www/wordpress/.wp_good_init" ]; then
     mkdir -p /var/www/wordpress
     cp -r /usr/src/wordpress/. /var/www/wordpress/
@@ -61,7 +61,7 @@ if [ ! -f "/var/www/wordpress/.wp_good_init" ]; then
     touch /var/www/wordpress/.wp_good_init
 fi
 
-# Verif que user a été créé ET admin aussi
+# Check user AND admin have been created
 if ! wp user get "${WP_ADMIN_USER}" --path=/var/www/wordpress --allow-root >/dev/null 2>&1; then
     echo "Error: WP_ADMIN_USER (${WP_ADMIN_USER}) was not created" >&2
     exit 1

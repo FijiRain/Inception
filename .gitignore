@@ -1,0 +1,6 @@
+srcs/.env
+secrets/*.txt
+.vagrant
+
+!secrets/*.txt.exemple
+!srcs/.env.exemple
